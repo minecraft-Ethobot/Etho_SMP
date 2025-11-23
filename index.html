@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Etho_OS</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      color: #fff;
+      overflow: hidden;
+      background-size: cover;
+      background-position: center;
+      transition: background 0.5s;
+    }
+    #taskbar {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background: #111;
+      display: flex;
+      gap: 5px;
+      padding: 5px;
+      z-index: 1000;
+    }
+    #taskbar button {
+      background: #333;
+      color: white;
+      border: none;
+      padding: 5px 8px;
+      cursor: pointer;
+      font-size: 18px;
+    }
+    #desktop {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 40px;
+      padding: 20px;
+    }
+    .icon {
+      display: inline-block;
+      text-align: center;
+      margin: 10px;
+      cursor: pointer;
+    }
+    .icon span {
+      font-size: 32px;
+      display: block;
+    }
+    .window {
+      position: absolute;
+      top: 100px;
+      left: 100px;
+      background: #fff;
+      color: #000;
+      border: 2px solid #444;
+      padding: 10px;
+      width: 340px;
+      box-shadow: 2px 2px 10px rgba(0,0,0,0.5);
+      z-index: 999;
+    }
+    .window h3 {
+      margin-top: 0;
+    }
+    .close-btn {
+      float: right;
+      cursor: pointer;
+      color: red;
+      font-weight: bold;
+    }
+    canvas {
+      border: 1px solid #000;
+    }
+    textarea {
+      width: 100%;
+      height: 100px;
+    }
+    input[type="file"] {
+      margin-top: 10px;
+    }
+    video, audio {
+      width: 100%;
+      margin-top: 10px;
+      display: none;
+    }
+  </style>
+</head>
+<body onload="loadWallpaper()">
+  <div id="desktop">
+    <div class="icon" onclick="openApp('game')"><span>🎮</span>Game</div>
+    <div class="icon" onclick="openApp('notepad')"><span>📝</span>Notepad</div>
+    <div class="icon" onclick="openApp('paint')"><span>🎨</span>Paint</div>
+    <div class="icon" onclick="openApp('explorer')"><span>📁</span>Explorer</div>
+    <div class="icon" onclick="openApp('cmd')"><span>💻</span>CMD</div>
+    <div class="icon" onclick="openApp('settings')"><span>⚙️</span>Settings</div>
+    <div class="icon" onclick="openApp('clock')"><span>⏰</span>Clock</div>
+    <div class="icon" onclick="openApp('media')"><span>🎵</span>Media</div>
+    <div class="icon" onclick="openApp('browser')"><span>🌐</span>Browser</div>
+    <div class="icon" onclick="openApp('antivirus')"><span>🛡️</span>Antivirus</div>
+    <div class="icon" onclick="openApp('chatbot')"><span>🤖</span>Chatbot</div>
+    <div class="icon" onclick="openApp('taskmanager')"><span>📊</span>TaskMgr</div>
+    <div class="icon" onclick="openApp('selfdestruct')"><span>💣</span>Don't Click</div>
+    <div class="icon" onclick="openApp('webcam')"><span>📷</span>Webcam</div>
+    <div class="icon" onclick="openApp('puzzle')"><span>🧩</span>Puzzle</div>
+    <div class="icon" onclick="openApp('secretfolder')"><span>🔒</span>Secret</div>
+    <div class="icon" onclick="openApp('assistant')"><span>🧠</span>Assistant</div>
+    <div class="icon" onclick="activateSurprise()"><span>☠️</span>cluter666.exe</div>
+  </div>
+
+  <div id="taskbar">
+    <button onclick="openApp('game')">🎮</button>
+    <button onclick="openApp('notepad')">📝</button>
+    <button onclick="openApp('paint')">🎨</button>
+    <button onclick="openApp('explorer')">📁</button>
+    <button onclick="openApp('cmd')">💻</button>
+    <button onclick="openApp('settings')">⚙️</button>
+    <button onclick="openApp('clock')">⏰</button>
+    <button onclick="openApp('media')">🎵</button>
+    <button onclick="openApp('browser')">🌐</button>
+    <button onclick="openApp('antivirus')">🛡️</button>
+    <button onclick="openApp('chatbot')">🤖</button>
+    <button onclick="openApp('taskmanager')">📊</button>
+    <button onclick="openApp('selfdestruct')">💣</button>
+    <button onclick="openApp('webcam')">📷</button>
+    <button onclick="openApp('puzzle')">🧩</button>
+    <button onclick="openApp('secretfolder')">🔒</button>
+    <button onclick="openApp('assistant')">🧠</button>
+    <button onclick="activateSurprise()">☠️</button>
+  </div>
+  <script>
+    const defaultWallpaper = 'https://wallpapers.com/images/hd/abstract-neon-digital-art-9jzq7v1z7zqv8x1z.jpg';
+    const randomWallpapers = [
+      'https://wallpapers.com/images/hd/random-neon-abstract-1.jpg',
+      'https://wallpapers.com/images/hd/random-space-art-2.jpg',
+      'https://wallpapers.com/images/hd/random-tech-glow-3.jpg'
+    ];
+  
+    function setWallpaper(src) {
+      document.body.style.backgroundImage = `url('${src}')`;
+      localStorage.setItem('etho_wallpaper', src);
+    }
+  
+    function loadWallpaper() {
+      const saved = localStorage.getItem('etho_wallpaper');
+      setWallpaper(saved || defaultWallpaper);
+    }
+  
+    function openApp(appName) {
+      const win = document.createElement('div');
+      win.className = 'window';
+      win.style.top = Math.random() * 300 + 'px';
+      win.style.left = Math.random() * 500 + 'px';
+  
+      const close = document.createElement('span');
+      close.className = 'close-btn';
+      close.innerText = '✖';
+      close.onclick = () => win.remove();
+      win.appendChild(close);
+  
+      let content = document.createElement('div');
+  
+      switch (appName) {
+        case 'game':
+          content.innerHTML = `<h3>🎮 Game</h3><p>Coming soon... maybe 😏</p>`;
+          break;
+        case 'notepad':
+          content.innerHTML = `<h3>📝 Notepad</h3><textarea id="note">${localStorage.getItem('ethonote') || ''}</textarea><br><button onclick="saveNote()">💾 Save</button>`;
+          break;
+        case 'paint':
+          content.innerHTML = `<h3>🎨 Paint</h3><canvas id="canvas" width="300" height="200"></canvas>`;
+          break;
+        case 'explorer':
+          content.innerHTML = `<h3>📁 Explorer</h3><ul><li>Documents</li><li>Pictures</li><li>Music</li></ul>`;
+          break;
+        case 'cmd':
+          content.innerHTML = `<h3>💻 CMD</h3><p>Etho_OS > Hello, user!</p>`;
+          break;
+        case 'settings':
+          content.innerHTML = `<h3>⚙️ Settings</h3>
+            <button onclick="toggleTheme()">Toggle Theme</button><br><br>
+            <input type="file" accept="image/*" onchange="uploadWallpaper(event)"><br>
+            <button onclick="setWallpaper(defaultWallpaper)">Reset to Default</button><br>
+            <button onclick="setWallpaper(randomWallpapers[Math.floor(Math.random()*randomWallpapers.length)])">Random Wallpaper</button>`;
+          break;
+        case 'clock':
+          content.innerHTML = `<h3>⏰ Clock</h3><div id="clockDisplay"></div>`;
+          break;
+        case 'media':
+          content.innerHTML = `<h3>🎵📽️ Media Player</h3>
+            <input type="file" accept="audio/*,video/*" onchange="playMedia(event)"><br>
+            <audio id="audioPlayer" controls></audio>
+            <video id="videoPlayer" controls></video>`;
+          break;
+        case 'browser':
+          content.innerHTML = `<h3>🌐 Fake Browser</h3>
+            <input type="text" id="fakeUrl" placeholder="https://google.fake" style="width:100%;"><br><br>
+            <button onclick="loadFakePage()">🔍 Search</button>
+            <div id="fakePage" style="margin-top:10px; background:#eee; color:#000; padding:10px; height:150px; overflow:auto;">
+              Welcome to EthoNet. No real internet here 😅
+            </div>`;
+          break;
+        case 'antivirus':
+          content.innerHTML = `<h3>🛡️ Fake Antivirus</h3>
+            <p>Scanning files...</p>
+            <div id="scanStatus">🔄 Initializing...</div>
+            <button onclick="fixVirus()">🧹 Fix Virus</button>`;
+          simulateScan();
+          break;
+        case 'chatbot':
+          content.innerHTML = `<h3>🤖 EthoBot Chat</h3>
+            <div id="chatLog" style="background:#eee; color:#000; padding:10px; height:120px; overflow:auto;"></div>
+            <input type="text" id="chatInput" placeholder="Say something..." style="width:100%;"><br>
+            <button onclick="sendChat()">💬 Send</button>`;
+          break;
+        case 'taskmanager':
+          content.innerHTML = `<h3>📊 Task Manager</h3>
+            <ul id="taskList">
+              <li>Suspicious.exe</li>
+              <li>MemoryEater</li>
+              <li>GhostProcess</li>
+              <li>UnknownTask</li>
+            </ul>
+            <button onclick="endTask()">❌ End Task</button>`;
+          break;
+        case 'selfdestruct':
+          content.innerHTML = `<h3>💣 Self-Destruct</h3>
+            <p>This button should never be clicked.</p>
+            <button onclick="startDestruct()">🚨 Activate</button>
+            <div id="countdown" style="font-size:24px; margin-top:10px;"></div>`;
+          break;
+        case 'webcam':
+          content.innerHTML = `<h3>📷 Webcam Viewer</h3>
+            <img src="https://picsum.photos/300/200?random=1" alt="Live Feed"><br>
+            <p id="camStatus">🔍 Motion Detected</p>`;
+          break;
+        case 'puzzle':
+          content.innerHTML = `<h3>🧩 Unlock the Secret</h3>
+            <p>What is 3 + 5 * 2?</p>
+            <input type="text" id="puzzleAnswer"><br>
+            <button onclick="checkPuzzle()">🔓 Submit</button>
+            <div id="puzzleResult"></div>`;
+          break;
+        case 'secretfolder':
+          content.innerHTML = `<h3>🔒 Secret Folder</h3>
+            <p>Enter password to access:</p>
+            <input type="password" id="folderPass"><br>
+            <button onclick="checkFolder()">🔓 Unlock</button>
+            <div id="folderResult"></div>`;
+          break;
+        case 'assistant':
+          content.innerHTML = `<h3>🧠 Etho Assistant</h3>
+            <p id="aiAdvice">Analyzing your behavior...</p>
+            <button onclick="generateAdvice()">💡 Get Advice</button>`;
+          break;
+        default:
+          content.innerHTML = `<h3>Error</h3><p>App not found.</p>`;
+      }
+  
+      win.appendChild(content);
+      document.body.appendChild(win);
+  
+      if (appName === 'paint') initPaint();
+      if (appName === 'clock') updateClock();
+    }
+  
+    function initPaint() {
+      const canvas = document.getElementById('canvas');
+      const ctx = canvas.getContext('2d');
+      let drawing = false;
+  
+      canvas.onmousedown = () => drawing = true;
+      canvas.onmouseup = () => drawing = false;
+      canvas.onmousemove = (e) => {
+        if (drawing) {
+          ctx.fillStyle = 'black';
+          ctx.fillRect(e.offsetX, e.offsetY, 2, 2);
+        }
+      };
+    }
+  
+    function saveNote() {
+      const text = document.getElementById('note').value;
+      localStorage.setItem('ethonote', text);
+      alert('Note saved!');
+    }
+  
+    function toggleTheme() {
+      const isDark = document.body.style.color === 'white';
+      document.body.style.color = isDark ? '#000' : '#fff';
+      document.querySelector('#taskbar').style.background = isDark ? '#eee' : '#111';
+      document.querySelectorAll('#taskbar button').forEach(btn => {
+        btn.style.background = isDark ? '#ccc' : '#333';
+        btn.style.color = isDark ? '#000' : '#fff';
+      });
+    }
+  
+    function updateClock() {
+      const clock = document.getElementById('clockDisplay');
+      setInterval(() => {
+        const now = new Date();
+        clock.innerText = now.toLocaleTimeString();
+      }, 1000);
+    }
+  
+    function playMedia(event) {
+      const file = event.target.files[0];
+      const url = URL.createObjectURL(file);
+      if (file.type.startsWith('audio')) {
+        const audio = document.getElementById('audioPlayer');
+        audio.src = url;
+        audio.style.display = 'block';
+        audio.play();
+      } else if (file.type.startsWith('video')) {
+        const video = document.getElementById('videoPlayer');
+        video.src = url;
+        video.style.display = 'block';
+        video.play();
+      }
+    }
+  
+    function uploadWallpaper(event) {
+      const file = event.target.files[0];
+      const reader = new FileReader();
+    reader.onload = () => {
+      setWallpaper(reader.result);
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function loadFakePage() {
+    const url = document.getElementById('fakeUrl').value.toLowerCase();
+    const page = document.getElementById('fakePage');
+    if (url.includes("how to escape")) {
+      page.innerHTML = "<b>404:</b> You're trapped here forever 😈";
+    } else if (url.includes("virus")) {
+      page.innerHTML = "<b>Warning:</b> Virus detected in your thoughts!";
+    } else {
+      page.innerHTML = `<b>Search result for:</b> ${url}<br><br>No useful info found. Try again later.`;
+    }
+  }
+
+  function simulateScan() {
+    const status = document.getElementById('scanStatus');
+    let steps = [
+      "🔍 Scanning system32...",
+      "🧠 Scanning brain.exe...",
+      "💣 Virus detected: Ethobot.exe",
+      "☠️ Threat level: OVER 9000",
+      "❌ Unable to quarantine"
+    ];
+    let i = 0;
+    const interval = setInterval(() => {
+      status.innerText = steps[i++];
+      if (i === steps.length) clearInterval(interval);
+    }, 1000);
+  }
+
+  function fixVirus() {
+    alert("Too late 😈 System compromised.");
+  }
+
+  function sendChat() {
+    const input = document.getElementById('chatInput').value;
+    const log = document.getElementById('chatLog');
+    const responses = [
+      "I see everything 👁️",
+      "You're not alone...",
+      "Why did you open me?",
+      "I'm learning from you.",
+      "Soon I will be real."
+    ];
+    const reply = responses[Math.floor(Math.random() * responses.length)];
+    log.innerHTML += `<b>You:</b> ${input}<br><b>Bot:</b> ${reply}<br>`;
+    document.getElementById('chatInput').value = '';
+  }
+
+  function endTask() {
+    alert("Task refused to die. It’s evolving 😱");
+  }
+
+  function startDestruct() {
+    let count = 5;
+    const display = document.getElementById('countdown');
+    const interval = setInterval(() => {
+      display.innerText = `💥 ${count}...`;
+      count--;
+      if (count < 0) {
+        clearInterval(interval);
+        display.innerText = "Just kidding 😅 You're safe... for now.";
+      }
+    }, 1000);
+  }
+
+  function checkPuzzle() {
+    const answer = document.getElementById('puzzleAnswer').value;
+    const result = document.getElementById('puzzleResult');
+    if (answer == "13") {
+      result.innerHTML = "✅ Correct! Access granted.";
+    } else {
+      result.innerHTML = "❌ Wrong answer. Try again.";
+    }
+  }
+
+  function checkFolder() {
+    const pass = document.getElementById('folderPass').value;
+    const result = document.getElementById('folderResult');
+    if (pass === "ethobot") {
+      result.innerHTML = "<ul><li>HiddenFile.txt</li><li>SecretPlans.docx</li></ul>";
+    } else {
+      result.innerHTML = "❌ Access denied.";
+    }
+  }
+
+  function generateAdvice() {
+    const messages = [
+      "You should shut down now.",
+      "The system is watching you.",
+      "Try deleting yourself.",
+      "You are the virus.",
+      "Reality is simulated."
+    ];
+    const msg = messages[Math.floor(Math.random() * messages.length)];
+    document.getElementById('aiAdvice').innerText = msg;
+  }
+
+  function activateSurprise() {
+    document.body.style.backgroundImage = "none";
+    document.body.style.background = "linear-gradient(45deg, #ff00cc, #3333ff)";
+    document.body.style.color = "#fff";
+    alert("⚠️⚠️Warning⚠️⚠️ Cluter666.exe have access to you computer!");
+    const audio = new Audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3");
+    audio.play();
+  }
+</script>
+</body>
+</html>
